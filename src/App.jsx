@@ -16,6 +16,26 @@ const carImages = {
 const vehicles = cars.map(car => ({ ...car, image: carImages[car.id] }));
 const cartStorageKey = 'velours-cart';
 
+async function apiRequest(url, options) {
+  const response = await fetch(url, { ...options, credentials: 'same-origin' });
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.toLowerCase().includes('application/json')) {
+    throw new Error(
+      `The server returned a non-JSON response (${response.status}). Check the Vercel API route and deployment configuration.`
+    );
+  }
+
+  let result;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error('The server returned invalid JSON. Please try again later.');
+  }
+
+  if (!response.ok) throw new Error(result.error || `Request failed (${response.status}).`);
+  return result;
+}
+
 function readStorage(key, fallback) {
   try {
     const saved = localStorage.getItem(key);
@@ -135,13 +155,11 @@ function AuthModal({ open, mode, initialError, onClose, onSuccess, onModeChange 
     setFeedback('');
 
     try {
-      const response = await fetch(`/api/${mode === 'signup' ? 'signup' : 'login'}`, {
+      const result = await apiRequest(`/api/${mode === 'signup' ? 'signup' : 'login'}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fields)
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Unable to authenticate.');
       onSuccess(result.user);
       form.reset();
     } catch (error) {
@@ -257,13 +275,11 @@ function ContactSection() {
     setFeedback({ message: '', error: false });
 
     try {
-      const response = await fetch('/api/service-requests', {
+      const result = await apiRequest('/api/service-requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fields)
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Unable to send your query.');
       setFeedback({ message: result.message, error: false });
       form.reset();
     } catch (error) {
@@ -404,12 +420,8 @@ function CartPage({ cartIds, setCartIds, user, authLoading, onAuthOpen }) {
     setOrdersLoading(true);
     setOrdersError('');
     setFeedback({ message: '', error: false });
-    fetch('/api/delivery-requests')
-      .then(async response => {
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Unable to load your orders.');
-        return result.orders;
-      })
+    apiRequest('/api/delivery-requests')
+      .then(result => result.orders)
       .then(savedOrders => {
         if (!ignoreResult) setOrders(savedOrders);
       })
@@ -433,13 +445,11 @@ function CartPage({ cartIds, setCartIds, user, authLoading, onAuthOpen }) {
     setFeedback({ message: '', error: false });
 
     try {
-      const response = await fetch('/api/delivery-requests', {
+      const result = await apiRequest('/api/delivery-requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address: fields.address, carIds: selectedCars.map(car => car.id) })
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Unable to place your order.');
       setOrders(current => [result, ...current]);
       setCartIds([]);
       setFeedback({ message: 'Your order has been placed. Our concierge will contact you to confirm the details.', error: false });
@@ -456,11 +466,9 @@ function CartPage({ cartIds, setCartIds, user, authLoading, onAuthOpen }) {
     setFeedback({ message: '', error: false });
 
     try {
-      const response = await fetch(`/api/delivery-requests/${encodeURIComponent(orderId)}/cancel`, {
+      const result = await apiRequest(`/api/delivery-requests/${encodeURIComponent(orderId)}/cancel`, {
         method: 'PATCH'
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Unable to cancel this order.');
       setOrders(current => current.map(order => order.id === result.id ? result : order));
     } catch (error) {
       setFeedback({ message: error.message || 'Unable to connect to the server.', error: true });
@@ -577,12 +585,8 @@ export default function App() {
 
   useEffect(() => {
     let ignoreResult = false;
-    fetch('/api/session')
-      .then(async response => {
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Unable to check your account.');
-        return result.user;
-      })
+    apiRequest('/api/session')
+      .then(result => result.user)
       .then(savedUser => {
         if (!ignoreResult) setUser(savedUser);
       })
@@ -608,9 +612,7 @@ export default function App() {
 
   async function logout() {
     try {
-      const response = await fetch('/api/logout', { method: 'POST' });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Unable to log out.');
+      await apiRequest('/api/logout', { method: 'POST' });
       setUser(null);
     } catch (error) {
       setAuthModal({ open: true, mode: 'login', error: error.message || 'Unable to connect to the server.' });

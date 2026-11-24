@@ -6,10 +6,56 @@ const { createApiRouter } = require('./api');
 let server;
 let baseUrl;
 
+function createTestStore() {
+  const users = new Map();
+  const sessions = new Map();
+  const orders = new Map();
+
+  return {
+    async initialize() {},
+    async createUser(user) {
+      if (users.has(user.email)) return false;
+      users.set(user.email, user);
+      return true;
+    },
+    async getUser(email) {
+      return users.get(email) || null;
+    },
+    async createSession(tokenHash, email, expiresAt) {
+      sessions.set(tokenHash, { email, expiresAt: new Date(expiresAt).getTime() });
+    },
+    async getSession(tokenHash) {
+      const session = sessions.get(tokenHash);
+      if (!session || session.expiresAt <= Date.now()) return null;
+      const user = users.get(session.email);
+      return user ? { user: { name: user.name, email: user.email }, expiresAt: session.expiresAt } : null;
+    },
+    async deleteSession(tokenHash) {
+      sessions.delete(tokenHash);
+    },
+    async createOrder(order) {
+      orders.set(order.id, order);
+      return order;
+    },
+    async listOrders(ownerEmail) {
+      return [...orders.values()]
+        .filter(order => order.ownerEmail === ownerEmail)
+        .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    },
+    async cancelOrder(id, ownerEmail) {
+      const order = orders.get(id);
+      if (!order || order.ownerEmail !== ownerEmail) return null;
+      if (order.status === 'cancelled') return { order, alreadyCancelled: true };
+      order.status = 'cancelled';
+      return { order, alreadyCancelled: false };
+    }
+  };
+}
+
 before(async () => {
   const app = express();
   app.use(express.json());
-  app.use('/api', createApiRouter());
+  app.use('/api', createApiRouter({ store: createTestStore() }));
   server = app.listen(0);
   await new Promise(resolve => server.once('listening', resolve));
   baseUrl = `http://127.0.0.1:${server.address().port}/api`;
@@ -58,6 +104,28 @@ test('rejects invalid service requests', async () => {
   });
 
   assert.equal(response.status, 400);
+});
+
+test('returns a JSON configuration error when the database is unavailable', async () => {
+  const app = express();
+  app.use(express.json());
+  app.use('/api', createApiRouter({
+    store: { async initialize() { throw new Error('DATABASE_URL is not configured.'); } }
+  }));
+  const temporaryServer = app.listen(0);
+  await new Promise(resolve => temporaryServer.once('listening', resolve));
+
+  try {
+    const response = await fetch(`http://127.0.0.1:${temporaryServer.address().port}/api/session`);
+    const result = await response.json();
+    assert.equal(response.status, 503);
+    assert.match(response.headers.get('content-type'), /application\/json/);
+    assert.match(result.error, /temporarily unavailable/);
+  } finally {
+    await new Promise((resolve, reject) => {
+      temporaryServer.close(error => error ? reject(error) : resolve());
+    });
+  }
 });
 
 test('validates signup, hashes credentials, and creates a session', async () => {
