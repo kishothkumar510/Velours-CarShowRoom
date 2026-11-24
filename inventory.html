@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore the curated luxury car collection at Velours Automotive.">
+    <title>Inventory | Velours Automotive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="page-header">
+        <a href="index.html" class="logo"><img src="velours-mark.svg" alt="" class="logo-mark">VELOURS<span>.</span></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="inventory.html" class="active">Inventory</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="cart.html" class="cart-link">Cart <span class="cart-count" aria-label="0 items">0</span></a></li>
+            </ul>
+        </nav>
+        <button class="mobile-toggle" type="button" aria-label="Open navigation" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+    </header>
+
+    <main class="page-main">
+        <section class="page-intro">
+            <span class="hero-subtitle">The Velours collection</span>
+            <h1>Our Inventory</h1>
+            <p>Discover the exceptional. Every vehicle is selected for its character, craftsmanship, and performance.</p>
+        </section>
+        <section class="featured inventory-section" aria-label="Available vehicles">
+            <div class="car-grid">
+                <article class="car-card" data-car-id="aston-dbs" data-car-name="Aston Martin DBS" data-car-price="316300" data-car-image="aston_martin.png">
+                    <div class="car-image"><img src="aston_martin.png" alt="Silver Aston Martin DBS in a dark showroom"></div>
+                    <div class="car-info">
+                        <h2 class="car-name">Aston Martin DBS</h2>
+                        <span class="car-price">$316,300</span>
+                        <div class="car-specs"><span>0-60 3.4s</span><span>715 HP</span><span>V12</span></div>
+                        <button class="btn add-to-cart" type="button" data-add-to-cart>Add to cart</button>
+                    </div>
+                </article>
+                <article class="car-card" data-car-id="ferrari-roma" data-car-name="Ferrari Roma" data-car-price="222620" data-car-image="ferrari_roma.png">
+                    <div class="car-image"><img src="ferrari_roma.png" alt="Red Ferrari Roma in a studio"></div>
+                    <div class="car-info">
+                        <h2 class="car-name">Ferrari Roma</h2>
+                        <span class="car-price">$222,620</span>
+                        <div class="car-specs"><span>0-60 3.4s</span><span>612 HP</span><span>V8 Turbo</span></div>
+                        <button class="btn add-to-cart" type="button" data-add-to-cart>Add to cart</button>
+                    </div>
+                </article>
+                <article class="car-card" data-car-id="bentley-continental" data-car-name="Bentley Continental GT" data-car-price="202500" data-car-image="bentley_gt.png">
+                    <div class="car-image"><img src="bentley_gt.png" alt="Blue Bentley Continental GT in a dark showroom"></div>
+                    <div class="car-info">
+                        <h2 class="car-name">Bentley Continental GT</h2>
+                        <span class="car-price">$202,500</span>
+                        <div class="car-specs"><span>0-60 3.6s</span><span>542 HP</span><span>V8</span></div>
+                        <button class="btn add-to-cart" type="button" data-add-to-cart>Add to cart</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="copyright">&copy; 2026 Velours Automotive. All rights reserved.</div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

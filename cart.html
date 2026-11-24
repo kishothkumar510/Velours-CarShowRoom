@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Review your Velours vehicle selection and arrange delivery.">
+    <title>Your Cart | Velours Automotive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="page-header">
+        <a href="index.html" class="logo"><img src="velours-mark.svg" alt="" class="logo-mark">VELOURS<span>.</span></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="inventory.html">Inventory</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="cart.html" class="active cart-link">Cart <span class="cart-count" aria-label="0 items">0</span></a></li>
+            </ul>
+        </nav>
+        <button class="mobile-toggle" type="button" aria-label="Open navigation" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+    </header>
+
+    <main class="page-main">
+        <section class="page-intro">
+            <span class="hero-subtitle">Your next drive begins here</span>
+            <h1>Your Cart</h1>
+            <p>Review your selection and request delivery from our concierge team.</p>
+        </section>
+        <section class="cart-layout">
+            <div class="cart-panel">
+                <h2>Selected vehicles</h2>
+                <div id="cartItems" class="cart-items" aria-live="polite"></div>
+                <div class="cart-total"><span>Selection total</span><strong id="cartTotal">$0</strong></div>
+                <form id="deliveryForm" class="delivery-form">
+                    <h2>Delivery details</h2>
+                    <div class="form-group">
+                        <label for="deliveryName">Full name</label>
+                        <input id="deliveryName" name="name" type="text" autocomplete="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryEmail">Email</label>
+                        <input id="deliveryEmail" name="email" type="email" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryAddress">Delivery address</label>
+                        <textarea id="deliveryAddress" name="address" rows="3" autocomplete="street-address" required></textarea>
+                    </div>
+                    <button id="deliverySubmit" type="submit" class="btn">Request delivery</button>
+                    <p id="deliveryFeedback" class="form-feedback" role="status" aria-live="polite"></p>
+                </form>
+            </div>
+            <aside class="orders-panel">
+                <h2>Delivery requests</h2>
+                <div id="deliveryOrders" class="delivery-orders" aria-live="polite"></div>
+            </aside>
+        </section>
+    </main>
+    <footer>
+        <div class="copyright">&copy; 2026 Velours Automotive. All rights reserved.</div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

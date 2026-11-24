@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Velours emblem">
+  <path fill="none" stroke="#d4af37" stroke-width="2.5" d="M32 4 57 14v17c0 14-10 23-25 29C17 54 7 45 7 31V14L32 4Z"/>
+  <path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="m18 23 14 21 14-21"/>
+  <path fill="#d4af37" d="M32 49h2v2h-2z"/>
+</svg>

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "aston-dbs",
+    "name": "Aston Martin DBS",
+    "price": 316300,
+    "specs": ["0-60 3.4s", "715 HP", "V12"],
+    "imageAlt": "Silver Aston Martin DBS in a dark showroom"
+  },
+  {
+    "id": "ferrari-roma",
+    "name": "Ferrari Roma",
+    "price": 222620,
+    "specs": ["0-60 3.4s", "612 HP", "V8 Turbo"],
+    "imageAlt": "Red Ferrari Roma in a studio"
+  },
+  {
+    "id": "bentley-continental",
+    "name": "Bentley Continental GT",
+    "price": 202500,
+    "specs": ["0-60 3.6s", "542 HP", "V8"],
+    "imageAlt": "Blue Bentley Continental GT in a dark showroom"
+  }
+]
